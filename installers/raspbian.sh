@@ -185,7 +185,7 @@ function _display_welcome() {
 
 # Outputs a RaspAP Install log line
 function _install_log() {
-    echo -e "${ANSI_GREEN}RaspAP Install: $1${ANSI_RESET}"
+    echo -e "${ANSI_GREEN}SmartNode Install: $1${ANSI_RESET}"
 }
 
 # Outputs a RaspAP divider
