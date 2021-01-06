@@ -218,17 +218,17 @@ function SaveHostAPDConfig($wpa_array, $enc_types, $modes, $interfaces, $status)
     // set AP interface default, override for ap-sta & bridged options
     $ap_iface = $_POST['interface']; // the hostap AP interface
     $cli_iface = $_POST['interface']; // the wifi client interface
-    $monitor_iface = $_POST['interface']; // the interface that the UI needs to monitor for data usage etc.
+    $session_iface = $_POST['interface']; // the interface that the UI needs to monitor for data usage etc.
     if ($wifiAPEnable) {
         // for AP-STA we monitor the uap0 interfacae, 
         // which is always the ap interface.
         $ap_iface = 'uap0'; 
-        $montior_iface = 'uap0';
+        $session_iface = 'uap0';
     }
     if ($bridgedEnable) { 
         // for bridged mode we monitor the bridge,
         // but keep the selected interface as both STA and AP
-        $monitor_iface = 'br0';
+        $session_iface = 'br0';
         $cli_iface = 'br0'; 
     }
 
@@ -241,7 +241,7 @@ function SaveHostAPDConfig($wpa_array, $enc_types, $modes, $interfaces, $status)
     $cfg['BridgedEnable'] = $bridgedEnable;
     $cfg['WifiManaged'] = $cli_iface;
     write_php_ini($cfg, RASPI_CONFIG.'/hostapd.ini');
-    $_SESSION['ap_interface'] = $monitor_iface;
+    $_SESSION['ap_interface'] = $session_iface;
 
     // Verify input
     if (empty($_POST['ssid']) || strlen($_POST['ssid']) > 32) {
