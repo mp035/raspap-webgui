@@ -227,7 +227,7 @@ function SaveHostAPDConfig($wpa_array, $enc_types, $modes, $interfaces, $status)
     }
     if ($bridgedEnable) { 
         // for bridged mode we monitor the bridge,
-        // but keep the selected interface as both STA and AP
+        // but keep the selected interface as AP
         $session_iface = 'br0';
         $cli_iface = 'br0'; 
     }
