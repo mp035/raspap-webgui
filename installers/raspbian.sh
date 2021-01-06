@@ -37,9 +37,12 @@
 # as you leave these references intact in the header comments of your source files.
 
 # Fetch latest release from GitHub API
-repo="billz/raspap-webgui" #override with -r, --repo option
+repo="mp035/raspap-webgui" #override with -r, --repo option
 readonly RASPAP_LATEST=$(curl -s "https://api.github.com/repos/$repo/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")' )
 branch="$RASPAP_LATEST" #override with -b, --branch option
+
+#mp035 remove this if you want to use a release.
+branch="smartnode"
 
 function _setup_colors() {
     ANSI_RED="\033[0;31m"
@@ -153,16 +156,30 @@ UPDATE_URL="https://raw.githubusercontent.com/$repo/$branch/"
 
 # Outputs a welcome message
 function _display_welcome() {
-    echo -e "${ANSI_RASPBERRY}\n"
-    echo -e " 888888ba                              .d888888   888888ba"
-    echo -e " 88     8b                            d8     88   88     8b"
-    echo -e "a88aaaa8P' .d8888b. .d8888b. 88d888b. 88aaaaa88a a88aaaa8P"
-    echo -e " 88    8b. 88    88 Y8ooooo. 88    88 88     88   88"
-    echo -e " 88     88 88.  .88       88 88.  .88 88     88   88"
-    echo -e " dP     dP  88888P8  88888P  88Y888P  88     88   dP"
-    echo -e "                             88"
-    echo -e "                             dP       version ${RASPAP_LATEST}"
-    echo -e "${ANSI_GREEN}"
+    echo -e "${ANSI_GREEN}\n"
+
+    echo -e "███████╗██╗   ██╗████████╗██╗   ██╗██████╗ ███████╗██████╗  ██████╗ ██╗███╗   ██╗████████╗    "
+    echo -e "██╔════╝██║   ██║╚══██╔══╝██║   ██║██╔══██╗██╔════╝██╔══██╗██╔═══██╗██║████╗  ██║╚══██╔══╝    "
+    echo -e "█████╗  ██║   ██║   ██║   ██║   ██║██████╔╝█████╗  ██████╔╝██║   ██║██║██╔██╗ ██║   ██║       "
+    echo -e "██╔══╝  ██║   ██║   ██║   ██║   ██║██╔══██╗██╔══╝  ██╔═══╝ ██║   ██║██║██║╚██╗██║   ██║       "
+    echo -e "██║     ╚██████╔╝   ██║   ╚██████╔╝██║  ██║███████╗██║     ╚██████╔╝██║██║ ╚████║   ██║       "
+    echo -e "╚═╝      ╚═════╝    ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝      ╚═════╝ ╚═╝╚═╝  ╚═══╝   ╚═╝       "
+    echo -e "                                                                                              "
+    echo -e "            ███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗███████╗                     "
+    echo -e "            ██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║██╔════╝                     "
+    echo -e "            ███████╗ ╚████╔╝ ███████╗   ██║   █████╗  ██╔████╔██║███████╗                     "
+    echo -e "            ╚════██║  ╚██╔╝  ╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║╚════██║                     "
+    echo -e "            ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║███████║                     "
+    echo -e "            ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚══════╝                     "
+    echo -e "                                                                                              "
+    echo -e "    ███████╗███╗   ███╗ █████╗ ██████╗ ████████╗███╗   ██╗ ██████╗ ██████╗ ███████╗           "
+    echo -e "    ██╔════╝████╗ ████║██╔══██╗██╔══██╗╚══██╔══╝████╗  ██║██╔═══██╗██╔══██╗██╔════╝           "
+    echo -e "    ███████╗██╔████╔██║███████║██████╔╝   ██║   ██╔██╗ ██║██║   ██║██║  ██║█████╗             "
+    echo -e "    ╚════██║██║╚██╔╝██║██╔══██║██╔══██╗   ██║   ██║╚██╗██║██║   ██║██║  ██║██╔══╝             "
+    echo -e "    ███████║██║ ╚═╝ ██║██║  ██║██║  ██║   ██║   ██║ ╚████║╚██████╔╝██████╔╝███████╗           "
+    echo -e "    ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝       "
+
+    echo -e "${ANSI_RASPBERRY}"
     echo -e "The Quick Installer will guide you through a few easy steps${ANSI_RESET}\n\n"
 }
 
