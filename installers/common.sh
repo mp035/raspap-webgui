@@ -553,7 +553,7 @@ function _optimize_php() {
 
 function _install_complete() {
     _install_log "Installation completed"
-    echo "This project needs your help! Please consider supporting RaspAP on Open Collective or GitHub:"
+    echo "This project is based on alot of work from RaspAP. Please consider supporting RaspAP on Open Collective or GitHub:"
     echo -e "${ANSI_RASPBERRY}"
     echo "> https://opencollective.com/raspap"
     echo "> https://github.com/sponsors/billz"
