@@ -7,7 +7,7 @@ require_once 'includes/wifi_functions.php';
  *
  *
  */
-function DisplayWPAConfig()
+function DisplayWPAConfig($returnJson = false)
 {
     $status = new StatusMessages();
     $networks = [];
@@ -105,5 +105,10 @@ function DisplayWPAConfig()
     preg_match('/state (UP|DOWN)/i', $stdoutIpWRepeatedSpaces, $matchesState) || $matchesState[1] = 'unknown';
     $ifaceStatus = strtolower($matchesState[1]) ? "up" : "down";
 
-    echo renderTemplate("configure_client", compact("status", "clientInterface", "ifaceStatus"));
+    if ($returnJson){
+      echo json_encode(compact("status", "clientInterface", "ifaceStatus", "networks"));
+    } else {
+      echo renderTemplate("configure_client", compact("status", "clientInterface", "ifaceStatus"));
+    }
+
 }

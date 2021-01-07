@@ -5,8 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --dest ../public",
-    "dev": "watch 'vue-cli-service build --dest ../public --mode development && npm run deploy' src",
-    "deploy": "rsync -rl --inplace ../public/ pi@10.0.0.8:/var/www/html/public",
+    "dev": "watch 'vue-cli-service build --dest ../public --mode development && ./deploy.sh' src",
+    "deploy": "npm run build && ./deploy.sh",
+    "deployall": "npm run build && ./deployall.sh",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"

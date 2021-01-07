@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.8373bc2c2650b4d0da7d5ab5e02e9b6f.js"
+  "/precache-manifest.026800d9b292f8206f7aa2235f19cdfc.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "SmartNode"});
