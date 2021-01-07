@@ -185,14 +185,28 @@ function _create_lighttpd_scripts() {
 
 # Copy extra config files required to configure lighthttpd
 function _install_lighttpd_configs() {
-    _install_log "Copying lighttpd extra config files"
+    _install_log "Copying lighttpd extra config files, and adjusting webroot."
 
     # Copy config files
     echo "Copying 50-raspap-router.conf to /etc/lighttpd/conf-available"
     sudo cp "$webroot_dir/config/50-raspap-router.conf" "/etc/lighttpd/conf-available" || _install_status 1 "Unable to copy lighttpd config file."
+    
     # link into conf-enabled
     echo "Creating link to /etc/lighttpd/conf-enabled"|| _install_status 1 "Unable to copy lighthttpd config file."
     sudo ln -s "/etc/lighttpd/conf-available/50-raspap-router.conf" "/etc/lighttpd/conf-enabled/50-raspap-router.conf" || _install_status 1 "Unable to symlink lighttpd config file."
+
+    # only edit the lighttpd config file if it has not 
+    # already been edited by smartnode.  This is signified
+    # by whether there is already a smartnode backup of the 
+    # config in the lighttpd folder.
+    LIGHTTPDCONF="/etc/lighttpd/lighttpd.conf"
+    if [ ! -f "$LIGHTTPDCONF.smartnode_backup" ]; then
+        echo "Changing lighttpd document root."
+        sudo sed -i.smartnode_backup 's/^\s*server\.document-root\(\s*\)\=\(\s*\).*/server.document-root\1=\2"\/var\/www\/html\/public"/' "$LIGHTTPDCONF" || _install_status 1 "Unable to edit $LIGHTTPDCONF."
+    else
+        echo "Lighttpd config file has already been edited by this installer.  Not changing."
+    fi
+
     sudo systemctl restart lighttpd.service || _install_status 1 "Unable to restart lighttpd"
     _install_status 0
 }
