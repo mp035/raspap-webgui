@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.ba3d66807306277625f19026f11f3531.js"
+  "/precache-manifest.8373bc2c2650b4d0da7d5ab5e02e9b6f.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "smartnode"});
+workbox.core.setCacheNameDetails({prefix: "SmartNode"});
 
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {

@@ -1,8 +1,9 @@
 .DS_Store
-node_modules
+node_modules/
 yarn-error.log
 *.swp
 includes/config.php
 rootCA.pem
 .Trash-1000/
 compiles/
+vue/node_modules/
