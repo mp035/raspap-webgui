@@ -7,3 +7,5 @@ rootCA.pem
 .Trash-1000/
 compiles/
 vue/node_modules/
+vue/pihost
+
