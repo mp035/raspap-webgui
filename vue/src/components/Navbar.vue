@@ -18,7 +18,7 @@
         </v-toolbar-title>
         <v-spacer></v-spacer>
       </slot>
-      <template v-if="loggedIn">
+      <template v-if="loadToken()">
         <m-menubutton
           v-if="$route.name != 'home'"
           icon="mdi-home"
@@ -59,11 +59,10 @@
 </template>
 
 <script>
-//import apiMixin from "../mixins/api-request";
-//import apiQueries from "../mixins/api-endpoints";
+import apiMixin from "../mixins/api-request";
 
 export default {
-  //mixins: [apiMixin, apiQueries],
+  mixins: [apiMixin],
   props: {
     showDrawer: {
       type: Boolean,

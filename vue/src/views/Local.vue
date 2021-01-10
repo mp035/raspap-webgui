@@ -24,11 +24,10 @@
 </template>
 
 <script>
-//import apiEndpoints from "../mixins/api-endpoints";
-//import apiRequest from "../mixins/api-request";
+import apiRequest from "../mixins/api-request";
 
 export default {
-  //mixins: [apiEndpoints, apiRequest],
+  mixins: [apiRequest],
   data() {
     //let userData = this.loadToken(); // can not access computed properties in data() so load the token manually.
     let drawerItems = [
@@ -98,23 +97,17 @@ export default {
     return { drawerItems };
   },
   created() {
-    //this.pollCloudServer();
+    this.getNetworks();
   },
   methods: {
     showError(message) {
       this.$refs.errorBox.showError(message);
     },
-    /*
-    pollCloudServer() {
-      // just polls the myDevices endpoint to check whether we are online.
-      // only re-run the polling loop whilst we are on the same route.
-      if (this.$router.currentRoute.name == "home") {
-        this.apiRequest(this.apiEndpoints.myDevices).finally(r => {
-          setTimeout(this.pollCloudServer, 10000);
-        });
-      }
+    getNetworks() {
+      this.apiRequest("GET", "list_aps.php").then(r => {
+        console.log(r);
+      });
     }
-    */
   }
 };
 </script>
