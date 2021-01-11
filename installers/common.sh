@@ -199,13 +199,16 @@ function _install_lighttpd_configs() {
     # already been edited by smartnode.  This is signified
     # by whether there is already a smartnode backup of the 
     # config in the lighttpd folder.
-    LIGHTTPDCONF="/etc/lighttpd/lighttpd.conf"
-    if [ ! -f "$LIGHTTPDCONF.smartnode_backup" ]; then
-        echo "Changing lighttpd document root."
-        sudo sed -i.smartnode_backup 's/^\s*server\.document-root\(\s*\)\=\(\s*\).*/server.document-root\1=\2"\/var\/www\/html\/public"/' "$LIGHTTPDCONF" || _install_status 1 "Unable to edit $LIGHTTPDCONF."
-    else
-        echo "Lighttpd config file has already been edited by this installer.  Not changing."
-    fi
+    
+    # only required for vue.js interface (disabled)
+    
+    #LIGHTTPDCONF="/etc/lighttpd/lighttpd.conf"
+    #if [ ! -f "$LIGHTTPDCONF.smartnode_backup" ]; then
+    #    echo "Changing lighttpd document root."
+    #    sudo sed -i.smartnode_backup 's/^\s*server\.document-root\(\s*\)\=\(\s*\).*/server.document-root\1=\2"\/var\/www\/html\/public"/' "$LIGHTTPDCONF" || _install_status 1 "Unable to edit $LIGHTTPDCONF."
+    #else
+    #    echo "Lighttpd config file has already been edited by this installer.  Not changing."
+    #fi
 
     sudo systemctl restart lighttpd.service || _install_status 1 "Unable to restart lighttpd"
     _install_status 0
