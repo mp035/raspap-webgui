@@ -1,0 +1,18 @@
+#! /bin/bash
+systemctl stop dnsmasq
+systemctl stop hostapd
+systemctl stop dhcpcd
+
+ip link ls up | grep -q 'uap0' &> /dev/null
+if [ $? == 0 ]; then
+    echo "Removing uap0 interface..."
+    iw dev uap0 del
+fi
+
+iw dev wlan0 interface add uap0 type __ap
+# Bring up uap0 interface
+ifconfig uap0 up
+
+systemctl start hostapd
+systemctl start dnsmasq
+systemctl start dhcpcd

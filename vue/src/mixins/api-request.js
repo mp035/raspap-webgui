@@ -2,8 +2,8 @@ export default {
     data(){
       return {
         apiPrefix:"api/",
-        //apiServer:"http://192.168.50.1/",  // for local testing with api on the pi.
-        apiServer: location.protocol + "//" + location.host + "/",
+        apiServer:"http://10.0.0.8/",  // for local testing with api on the pi.
+        //apiServer: location.protocol + "//" + location.host + "/",
       }
     },
     methods: {

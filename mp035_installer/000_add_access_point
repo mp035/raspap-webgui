@@ -1,0 +1,53 @@
+#! /bin/bash
+# https://www.raspberrypi.org/documentation/configuration/wireless/access-point-routed.md 
+
+apt update
+apt full-upgrade  
+
+#install hostapd service
+apt install hostapd
+
+#setup hostapd service
+cp hostapd.conf /etc/hostapd/
+
+#not sure why we disable systemd-networkd
+#systemctl disable systemd-networkd
+
+#install dnsmasq service
+apt install dnsmasq
+
+#add static AP interface to dhcpcd config.
+cat > /etc/dhcpcd.conf << EOM
+#mp035 added configuration for AP interface
+interface uap0
+	static ip_address=192.168.8.1/24
+	nohook wpa_supplicant
+
+EOM
+
+#setup dnsmasq service
+if [ ! -f /etc/dnsmasq.conf.orig ]; then
+    mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
+fi
+cp dnsmasq.conf /etc/
+
+ip link ls up | grep -q 'uap0' &> /dev/null
+if [ $? == 0 ]; then
+    echo "Removing uap0 interface..."
+    iw dev uap0 del
+fi
+
+iw dev wlan0 interface add uap0 type __ap
+# Bring up uap0 interface
+ifconfig uap0 up
+
+systemctl unmask hostapd
+systemctl enable hostapd
+systemctl start hostapd
+systemctl start dnsmasq
+
+systemctl start dhcpcd
+
+
+#install lighttpd and php
+

@@ -1,6 +1,6 @@
 <?php
 
-set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . '/../..');
+require_once "common.php"; // must be first.
 
 require 'includes/csrf.php';
 require_once 'includes/config.php';
@@ -13,11 +13,19 @@ $network  = null;
 $ssid     = null;
 
 knownWifiStations($networks);
-//nearbyWifiStations($networks, !isset($_REQUEST["refresh"]));
+nearbyWifiStations($networks, !isset($_REQUEST["refresh"]));
 nearbyWifiStations($networks, false);
 connectedWifiStations($networks);
 sortNetworksByRSSI($networks);
 
-echo json_encode(compact('networks'));
+// turn the newtorks object into a numerically keyed array
+// so that order is maintained by javascript.
+$netlist = [];
+array_walk($networks, function($value, $key) use (&$netlist){
+  $value['SSID'] = $key;
+  $netlist[] = $value;
+});
+
+echo json_encode(['networks'=>$netlist]);
 
 ?>
