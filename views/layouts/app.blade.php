@@ -80,7 +80,7 @@
           @endif
           @if (RASPI_HOTSPOT_ENABLED)
         <li class="nav-item">
-          <a class="nav-link" href="hostapd_conf"><i class="far fa-dot-circle fa-fw mr-2"></i><span class="nav-label">{{ _("Hotspot") }}</a>
+          <a class="nav-link" href="hostapd_conf"><i class="far fa-dot-circle fa-fw mr-2"></i><span class="nav-label">{{ _("Admin Hotspot") }}</a>
         </li>
           @endif
           @if (RASPI_DHCP_ENABLED && !$bridgedEnable)
@@ -133,9 +133,11 @@
           <a class="nav-link" href="system_info"><i class="fas fa-cube fa-fw mr-2"></i><span class="nav-label">{{ _("System") }}</a>
           </li>
             @endif
+            @if (RASPI_ABOUT_ENABLED)
          <li class="nav-item">
           <a class="nav-link" href="about"><i class="fas fa-info-circle fa-fw mr-2"></i><span class="nav-label">{{ _("About RaspAP") }}</a>
         </li>
+            @endif
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 

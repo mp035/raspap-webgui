@@ -34,7 +34,7 @@
 
         @if (!RASPI_MONITOR_ENABLED)
             <input type="submit" class="btn btn-warning" name="system_reboot"   value="{{ _("Reboot") }}" />
-            <input type="submit" class="btn btn-warning" name="system_shutdown" value="{{ _("Shutdown") }}" />
+            <!-- input type="submit" class="btn btn-warning" name="system_shutdown" value="{{ _("Shutdown") }}" /-->
         @endif
      </form>
       </div>

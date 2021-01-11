@@ -1,6 +1,6 @@
 <?php
 
-define('RASPI_BRAND_TEXT', 'RaspAP');
+define('RASPI_BRAND_TEXT', 'SmartNode');
 define('RASPI_CONFIG', '/etc/raspap');
 define('RASPI_CONFIG_NETWORK', RASPI_CONFIG.'/networking/defaults.json');
 define('RASPI_ADMIN_DETAILS', RASPI_CONFIG.'/raspap.auth');
@@ -31,17 +31,19 @@ define('RASPI_5GHZ_ISO_ALPHA2', array('NL','US'));
 define('RASPI_5GHZ_MAX_CHANNEL', 165);
 
 // Optional services, set to true to enable.
+define('RASPI_DASHBOARD_ENABLED', false);
 define('RASPI_WIFICLIENT_ENABLED', true);
 define('RASPI_HOTSPOT_ENABLED', true);
-define('RASPI_NETWORK_ENABLED', true);
-define('RASPI_DHCP_ENABLED', true);
+define('RASPI_NETWORK_ENABLED', false);
+define('RASPI_DHCP_ENABLED', false);
 define('RASPI_ADBLOCK_ENABLED', false);
 define('RASPI_OPENVPN_ENABLED', false);
 define('RASPI_TORPROXY_ENABLED', false);
 define('RASPI_CONFAUTH_ENABLED', true);
-define('RASPI_CHANGETHEME_ENABLED', true);
-define('RASPI_VNSTAT_ENABLED', true);
+define('RASPI_CHANGETHEME_ENABLED', false);
+define('RASPI_VNSTAT_ENABLED', false);
 define('RASPI_SYSTEM_ENABLED', true);
+define('RASPI_ABOUT_ENABLED', false);
 define('RASPI_MONITOR_ENABLED', false);
 
 // Locale settings
