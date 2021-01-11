@@ -19,7 +19,7 @@
           </div>
           <div class="col-xs-3 col-sm-3">
             <label for="code">{{ _("Color") }}</label>
-            <input class="form-control color-input" value="rgb(151, 203, 82)" aria-label="color" />
+            <input class="form-control color-input" value="#d8224c" aria-label="color" />
           </div>
         </div>
         <form action="system_info" method="POST">

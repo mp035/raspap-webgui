@@ -5,7 +5,7 @@ if (!defined('RASPI_CONFIG')) {
 }
 
 $defaults = [
-  'RASPI_BRAND_TEXT' => 'RaspAP',
+  'RASPI_BRAND_TEXT' => 'SmartNode',
   'RASPI_VERSION' => '2.6-beta',
   'RASPI_CONFIG_NETWORK' => RASPI_CONFIG.'/networking/defaults.json',
   'RASPI_ADMIN_DETAILS' => RASPI_CONFIG.'/raspap.auth',
@@ -36,16 +36,17 @@ $defaults = [
   'RASPI_5GHZ_MAX_CHANNEL' => 165,
 
   // Optional services, set to true to enable.
+  'RASPI_DASHBOARD_ENABLED' => false,
   'RASPI_WIFICLIENT_ENABLED' => true,
   'RASPI_HOTSPOT_ENABLED' => true,
-  'RASPI_NETWORK_ENABLED' => true,
-  'RASPI_DHCP_ENABLED' => true,
+  'RASPI_NETWORK_ENABLED' => false,
+  'RASPI_DHCP_ENABLED' => false,
   'RASPI_ADBLOCK_ENABLED' => false,
   'RASPI_OPENVPN_ENABLED' => false,
   'RASPI_TORPROXY_ENABLED' => false,
   'RASPI_CONFAUTH_ENABLED' => true,
-  'RASPI_CHANGETHEME_ENABLED' => true,
-  'RASPI_VNSTAT_ENABLED' => true,
+  'RASPI_CHANGETHEME_ENABLED' => false,
+  'RASPI_VNSTAT_ENABLED' => false,
   'RASPI_SYSTEM_ENABLED' => true,
   'RASPI_MONITOR_ENABLED' => false,
 

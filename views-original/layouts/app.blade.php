@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{{ _("SmartNode Configuration Portal") }}</title>
+    <title>{{ _("RaspAP WiFi Configuration Portal") }}</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="dist/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -73,11 +73,9 @@
             </div>
           </div>
         </div>
-          @if (RASPI_DASHBOARD_ENABLED)
         <li class="nav-item">
           <a class="nav-link" href="wlan0_info"><i class="fas fa-tachometer-alt fa-fw mr-2"></i><span class="nav-label">{{ _("Dashboard") }}</span></a>
         </li>
-          @endif
           @if (RASPI_HOTSPOT_ENABLED)
         <li class="nav-item">
           <a class="nav-link" href="hostapd_conf"><i class="far fa-dot-circle fa-fw mr-2"></i><span class="nav-label">{{ _("Hotspot") }}</a>

@@ -7,7 +7,7 @@
       <div class="card-header">
         <div class="row">
           <div class="col">
-            <i class="far fa-dot-circle mr-2"></i>{{ _("Admin Wifi Interface") }}
+            <i class="far fa-dot-circle mr-2"></i>{{ _("Hotspot") }}
           </div>
           <div class="col">
             <button class="btn btn-light btn-icon-split btn-sm service-status float-right">
@@ -26,13 +26,17 @@
           <!-- Nav tabs -->
           <ul class="nav nav-tabs">
             <li class="nav-item"><a class="nav-link active" id="basictab" href="#basic" aria-controls="basic" data-toggle="tab">{{ _("Basic") }}</a></li>
+            <li class="nav-item"><a class="nav-link" id="securitytab" href="#security" data-toggle="tab">{{ _("Security") }}</a></li>
             <li class="nav-item"><a class="nav-link" id="advancedtab" href="#advanced" data-toggle="tab">{{ _("Advanced") }}</a></li>
+            <li class="nav-item"><a class="nav-link" id="logoutputtab" href="#logoutput" data-toggle="tab">{{ _("Logging") }}</a></li>
           </ul>
 
           <!-- Tab panes -->
           <div class="tab-content">
             @include("hostapd.basic")
+            @include("hostapd.security")
             @include("hostapd.advanced")
+            @include("hostapd.logging")
           </div><!-- /.tab-content -->
 
           @if (!RASPI_MONITOR_ENABLED)
