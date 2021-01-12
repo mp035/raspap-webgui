@@ -103,5 +103,6 @@ $bridgedEnabled = getBridgedState();
             DisplayAbout();
             break;
         default:
-            DisplayDashboard();
+            //DisplayDashboard();
+            DisplayWPAConfig();
         }

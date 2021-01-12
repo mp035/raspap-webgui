@@ -38,10 +38,10 @@
           @if (!RASPI_MONITOR_ENABLED)
             <input type="submit" class="btn btn-outline btn-primary" name="SaveHostAPDSettings" value="{{ _("Save settings") }}" />
             @if ($hostapdstatus[0] == 0)
-              <input type="submit" class="btn btn-success" name="StartHotspot" value="<?php echo  _("Start hotspot"); $msg=_("Starting hotspot"); ?>" data-toggle="modal" data-target="#hostapdModal"/>
+              <input type="submit" class="btn btn-success" name="StartHotspot" value="<?php echo  _("Start Hotspot"); $msg=_("Starting hotspot"); ?>" data-toggle="modal" data-target="#hostapdModal"/>
             @else
-              <input type="submit" class="btn btn-warning" name="StopHotspot" value="{{ _("Stop hotspot")  }}"/>
-              <input type ="submit" class="btn btn-warning" name="RestartHotspot" value="<?php echo _("Restart hotspot"); $msg=_("Restarting hotspot"); ?>" data-toggle="modal" data-target="#hostapdModal"/>
+              {{-- <input type="submit" class="btn btn-warning" name="StopHotspot" value="{{ _("Stop hotspot")  }}"/> --}}
+              <input type ="submit" class="btn btn-warning" name="RestartHotspot" value="<?php echo _("Restart Admin Hotspot"); $msg=_("Restarting hotspot"); ?>" data-toggle="modal" data-target="#hostapdModal"/>
             @endif
             <!-- Modal -->
             <div class="modal fade" id="hostapdModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">

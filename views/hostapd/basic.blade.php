@@ -20,9 +20,6 @@
     </div>
   </div>
   
-
-  
-  
   <div class="row">
     <div class="form-group col-md-6">
     <label for="cbxcountries">{{ _("Country Code") }}</label>
