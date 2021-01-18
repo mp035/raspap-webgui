@@ -42,6 +42,15 @@ function DisplayWPAConfig($returnJson = false)
             }
 
             $ok = true;
+            //mp035: always add the dummy network to the wpa_supplicant file
+            unset($tmp_networks['DummyDoNotDelete']); // in case the dummy network is already in the array for some reason.
+            fwrite($wpa_file, 'network={' . PHP_EOL
+              . "\t# this is a dummy network to keep APSTA mode alive when no networks are configured" . PHP_EOL
+              . "\tscan_ssid=0" . PHP_EOL
+              . "\tssid=\"DummyDoNotDelete\"" . PHP_EOL 
+              . "\tpsk=\"DoNotDelete" . uniqid() . "\"" . PHP_EOL
+             . '}' . PHP_EOL);
+
             foreach ($tmp_networks as $ssid => $network) {
                 if ($network['protocol'] === 'Open') {
                     fwrite($wpa_file, "network={".PHP_EOL);

@@ -11,7 +11,11 @@ function knownWifiStations(&$networks)
             $network = array('visible' => false, 'configured' => true, 'connected' => false);
         } elseif (isset($network) && $network !== null) {
             if (preg_match('/^\s*}\s*$/', $line)) {
-                $networks[$ssid] = $network;
+                //mp035 ignore the dummy network which keeps AP-STA alive
+                //when no networks are configured.
+                if ($ssid != "DummyDoNotDelete"){
+                  $networks[$ssid] = $network;
+                }
                 $network = null;
                 $ssid = null;
             } elseif ($lineArr = preg_split('/\s*=\s*/', trim($line))) {
