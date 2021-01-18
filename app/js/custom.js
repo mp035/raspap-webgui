@@ -248,6 +248,19 @@ $('#hostapdModal').on('shown.bs.modal', function (e) {
     }, 1000);
 });
 
+$('#configureClientModal').on('shown.bs.modal', function (e) {
+  var waitSeconds = 9;
+  var seconds = waitSeconds;
+  var countDown = setInterval(function(){
+    if(seconds <= 0){
+      clearInterval(countDown);
+    }
+    var pct = Math.floor(100-(seconds*100/waitSeconds));
+    document.getElementsByClassName('progress-bar').item(0).setAttribute('style','width:'+Number(pct)+'%');
+    seconds --;
+  }, 1000);
+});
+
 /*
 Sets the wirelss channel select options based on hw_mode and country_code.
 

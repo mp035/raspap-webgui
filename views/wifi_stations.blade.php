@@ -79,12 +79,13 @@
 
         <div class="btn-group btn-block ">
             @if ($network['configured'])
-              <input type="submit" class="col-xs-4 col-md-4 btn btn-warning" value="{{ _("Update") }}" id="update{{ $index }}" name="update{{ $index }}"{{ $network['protocol'] === 'Open' ? ' disabled' : '' }} />
+              <input type="submit" class="col-xs-4 col-md-4 btn btn-warning" value="{{ _("Update") }}" id="update{{ $index }}" name="update{{ $index }}"{{ $network['protocol'] === 'Open' ? ' disabled' : '' }} data-toggle="modal" data-target="#configureClientModal"/>
               <button type="submit" class="col-xs-4 col-md-4 btn btn-info" value="{{ $index }}" name="connect">{{ _("Connect") }}</button>
             @else
-              <input type="submit" class="col-xs-4 col-md-4 btn btn-info" value="{{ _("Add") }}" id="update{{ $index }}" name="update{{ $index }}" {{ $network['protocol'] === 'Open' ? '' : ' disabled' }} />
+              {{--<input type="submit" class="col-xs-4 col-md-4 btn btn-info" value="{{ _("Add") }}" id="update{{ $index }}" name="update{{ $index }}" {{ $network['protocol'] === 'Open' ? '' : ' disabled' }} />--}}
+              <input type="submit" class="col-xs-4 col-md-4 btn btn-info" value="{{ _("Add") }}" id="update{{ $index }}" name="update{{ $index }}" {{ $network['protocol'] === 'Open' ? '' : ' disabled' }} data-toggle="modal" data-target="#configureClientModal"/>
             @endif
-              <input type="submit" class="col-xs-4 col-md-4 btn btn-danger" value="{{ _("Delete") }}" name="delete{{ $index }}" {{ $network['configured'] ? '' : ' disabled' }} />
+              <input type="submit" class="col-xs-4 col-md-4 btn btn-danger" value="{{ _("Delete") }}" name="delete{{ $index }}" {{ $network['configured'] ? '' : ' disabled' }} data-toggle="modal" data-target="#configureClientModal"/>
         </div><!-- /.btn-group -->
       </div><!-- /.card-body -->
     </div><!-- /.card -->
@@ -92,4 +93,3 @@
   <?php $index += 1; ?>
   @endforeach
 </div><!-- /.row -->
-

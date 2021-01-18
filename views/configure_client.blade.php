@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="row">
+<div class="row" id="wifiClientContent">
   <div class="col-lg-12">
     <div class="card">
       <div class="card-header">
@@ -32,8 +32,30 @@
           <div class="row js-wifi-stations w-100 loading-spinner"></div>
         </form>
       </div><!-- ./ card-body -->
-      <div class="card-footer">{!! _("<strong>Note:</strong> WEP access points appear as 'Open'. RaspAP does not currently support connecting to WEP") !!}</div>
+      <div class="card-footer">{!! _("<strong>Note:</strong> WEP access points appear as 'Open'.") !!} {{RASPI_BRAND_TEXT}} {!! _("does not currently support connecting to WEP") !!}</div>
     </div><!-- /.card -->
   </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="configureClientModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="ModalLabel"><i class="fas fa-sync-alt mr-2"></i>Configuring WiFi Client...</div>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12 mb-3 mt-1">{{ _("Configuring Wifi Client Interface")  }}...</div>
+        <div class="progress" style="height: 20px;">
+          <div class="progress-bar bg-info" role="progressbar" id="progressBar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="9"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline btn-primary" data-dismiss="modal">{{ _("Close") }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection

@@ -46,7 +46,7 @@ function DisplayWPAConfig($returnJson = false)
             unset($tmp_networks['DummyDoNotDelete']); // in case the dummy network is already in the array for some reason.
             fwrite($wpa_file, 'network={' . PHP_EOL
               . "\t# this is a dummy network to keep APSTA mode alive when no networks are configured" . PHP_EOL
-              . "\tscan_ssid=0" . PHP_EOL
+              . "\tscan_ssid=1" . PHP_EOL
               . "\tssid=\"DummyDoNotDelete\"" . PHP_EOL 
               . "\tpsk=\"DoNotDelete" . uniqid() . "\"" . PHP_EOL
              . '}' . PHP_EOL);
@@ -102,9 +102,6 @@ function DisplayWPAConfig($returnJson = false)
         }
     }
 
-    nearbyWifiStations($networks);
-    connectedWifiStations($networks);
-    sortNetworksByRSSI($networks);
 
     $clientInterface = $_SESSION['wifi_client_interface'];
 
@@ -115,6 +112,9 @@ function DisplayWPAConfig($returnJson = false)
     $ifaceStatus = strtolower($matchesState[1]) ? "up" : "down";
 
     if ($returnJson){
+      nearbyWifiStations($networks);
+      connectedWifiStations($networks);
+      sortNetworksByRSSI($networks);
       echo json_encode(compact("status", "clientInterface", "ifaceStatus", "networks"));
     } else {
       echo renderTemplate("configure_client", compact("status", "clientInterface", "ifaceStatus"));
