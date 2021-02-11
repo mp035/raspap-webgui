@@ -33,7 +33,9 @@ function DisplayWPAConfig()
                     $tmp_networks[$_POST['ssid' . $post_match[1]]] = array(
                     'protocol' => ( $_POST['protocol' . $post_match[1]] === 'Open' ? 'Open' : 'WPA' ),
                     'passphrase' => $_POST['passphrase' . $post_match[1]],
-                    'configured' => true
+                    'configured' => true,
+                    'hidden'=> ($_POST['hidden' . $post_match[1]] ?? "0") == "1",
+
                     );
                     if (array_key_exists('priority' . $post_match[1], $_POST)) {
                         $tmp_networks[$_POST['ssid' . $post_match[1]]]['priority'] = $_POST['priority' . $post_match[1]];
@@ -47,7 +49,9 @@ function DisplayWPAConfig()
                     fwrite($wpa_file, "network={".PHP_EOL);
                     fwrite($wpa_file, "\tssid=\"".$ssid."\"".PHP_EOL);
                     fwrite($wpa_file, "\tkey_mgmt=NONE".PHP_EOL);
-                    fwrite($wpa_file, "\tscan_ssid=1".PHP_EOL);
+                    if($network['hidden']){
+                        fwrite($wpa_file, "\tscan_ssid=1".PHP_EOL);
+                    }
                     if (array_key_exists('priority', $network)) {
                         fwrite($wpa_file, "\tpriority=".$network['priority'].PHP_EOL);
                     }
@@ -62,6 +66,9 @@ function DisplayWPAConfig()
                                 if (array_key_exists('priority', $network)) {
                                     fwrite($wpa_file, "\tpriority=".$network['priority'].PHP_EOL);
                                 }
+                                if($network['hidden']){
+                                    fwrite($wpa_file, "\tscan_ssid=1".PHP_EOL);
+                                }
                                 fwrite($wpa_file, $line.PHP_EOL);
                             } else {
                                 fwrite($wpa_file, $line.PHP_EOL);
@@ -73,7 +80,6 @@ function DisplayWPAConfig()
                     }
                 }
             }
-
             if ($ok) {
                 system('sudo cp /tmp/wifidata ' . RASPI_WPA_SUPPLICANT_CONFIG, $returnval);
                 if ($returnval == 0) {
