@@ -24,6 +24,9 @@
           @if ($network['connected'])
             <i class="fas fa-exchange-alt"></i>
           @endif
+          @if ($network['hidden'])
+            <i class="fas fa-eye-slash"></i>
+          @endif
           @if (!$network['configured'] && !$network['connected'])
             {{_("Not configured")}}
           @endif
@@ -59,6 +62,7 @@
           <input type="hidden" name="priority{{ $index  }}" value="{{ $network['priority'] }}" />
         @endif
         <input type="hidden" name="protocol{{ $index  }}" value="{{ $network['protocol'] }}" />
+        <input type="hidden" name="hidden{{ $index  }}" value="{{ $network['hidden'] }}" />
 
         <div class="info-item-wifi">{{ _("Security") }}</div>
         <div>{{ $network['protocol']  }}</div>

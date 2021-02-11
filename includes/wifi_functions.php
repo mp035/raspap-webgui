@@ -8,7 +8,7 @@ function knownWifiStations(&$networks)
     exec(' sudo cat ' . RASPI_WPA_SUPPLICANT_CONFIG, $known_return);
     foreach ($known_return as $line) {
         if (preg_match('/network\s*=/', $line)) {
-            $network = array('visible' => false, 'configured' => true, 'connected' => false);
+            $network = array('visible' => false, 'configured' => true, 'connected' => false, 'hidden'=> false);
         } elseif (isset($network) && $network !== null) {
             if (preg_match('/^\s*}\s*$/', $line)) {
                 //mp035 ignore the dummy network which keeps AP-STA alive
@@ -39,6 +39,11 @@ function knownWifiStations(&$networks)
                     break;
                 case 'priority':
                     $network['priority'] = trim($lineArr[1], '"');
+                    break;
+                case 'scan_ssid':
+                    if(trim($lineArr[1]) === '1'){
+                        $network['hidden'] = true;
+                    }
                     break;
                 }
             }
