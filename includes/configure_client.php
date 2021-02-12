@@ -7,123 +7,151 @@ require_once 'includes/wifi_functions.php';
  *
  *
  */
-function DisplayWPAConfig($returnJson = false)
+
+function WriteNetworksToWpaSupplicantFile($argNetworks, $status)
 {
-    $status = new StatusMessages();
-    $networks = [];
 
-    getWifiInterface();
-    knownWifiStations($networks);
+  if ($wpa_file = fopen('/tmp/wifidata', 'w')) {
+    fwrite($wpa_file, 'ctrl_interface=DIR=' . RASPI_WPA_CTRL_INTERFACE . ' GROUP=netdev' . PHP_EOL);
+    fwrite($wpa_file, 'update_config=1' . PHP_EOL);
 
-    if (isset($_POST['connect'])) {
-        $result = 0;
-        exec('sudo wpa_cli -i ' . $_SESSION['wifi_client_interface'] . ' select_network '.strval($_POST['connect']));
-        $status->addMessage('New network selected', 'success');
-    } elseif (isset($_POST['client_settings'])) {
-        $tmp_networks = $networks;
-        if ($wpa_file = fopen('/tmp/wifidata', 'w')) {
-            fwrite($wpa_file, 'ctrl_interface=DIR=' . RASPI_WPA_CTRL_INTERFACE . ' GROUP=netdev' . PHP_EOL);
-            fwrite($wpa_file, 'update_config=1' . PHP_EOL);
-
-            foreach (array_keys($_POST) as $post) {
-                if (preg_match('/delete(\d+)/', $post, $post_match)) {
-                    unset($tmp_networks[$_POST['ssid' . $post_match[1]]]);
-                } elseif (preg_match('/update(\d+)/', $post, $post_match)) {
-                    // NB, multiple protocols are separated with a forward slash ('/')
-                    $tmp_networks[$_POST['ssid' . $post_match[1]]] = array(
-                    'protocol' => ( $_POST['protocol' . $post_match[1]] === 'Open' ? 'Open' : 'WPA' ),
-                    'passphrase' => $_POST['passphrase' . $post_match[1]],
-                    'configured' => true,
-                    'hidden'=> ($_POST['hidden' . $post_match[1]] ?? "0") == "1",
-
-                    );
-                    if (array_key_exists('priority' . $post_match[1], $_POST)) {
-                        $tmp_networks[$_POST['ssid' . $post_match[1]]]['priority'] = $_POST['priority' . $post_match[1]];
-                    }
-                }
-            }
-
-            $ok = true;
-            //mp035: always add the dummy network to the wpa_supplicant file
-            unset($tmp_networks['DummyDoNotDelete']); // in case the dummy network is already in the array for some reason.
-            fwrite($wpa_file, 'network={' . PHP_EOL
-              . "\t# this is a dummy network to keep APSTA mode alive when no networks are configured" . PHP_EOL
-              . "\tscan_ssid=1" . PHP_EOL
-              . "\tssid=\"DummyDoNotDelete\"" . PHP_EOL 
-              . "\tpsk=\"DoNotDelete" . uniqid() . "\"" . PHP_EOL
-             . '}' . PHP_EOL);
-
-            foreach ($tmp_networks as $ssid => $network) {
-                if ($network['protocol'] === 'Open') {
-                    fwrite($wpa_file, "network={".PHP_EOL);
-                    fwrite($wpa_file, "\tssid=\"".$ssid."\"".PHP_EOL);
-                    fwrite($wpa_file, "\tkey_mgmt=NONE".PHP_EOL);
-                    if($network['hidden']){
-                        fwrite($wpa_file, "\tscan_ssid=1".PHP_EOL);
-                    }
-                    if (array_key_exists('priority', $network)) {
-                        fwrite($wpa_file, "\tpriority=".$network['priority'].PHP_EOL);
-                    }
-                    fwrite($wpa_file, "}".PHP_EOL);
-                } else {
-                    if (strlen($network['passphrase']) >=8 && strlen($network['passphrase']) <= 63) {
-                        unset($wpa_passphrase);
-                        unset($line);
-                        exec('wpa_passphrase '.escapeshellarg($ssid). ' ' . escapeshellarg($network['passphrase']), $wpa_passphrase);
-                        foreach ($wpa_passphrase as $line) {
-                            if (preg_match('/^\s*}\s*$/', $line)) {
-                                if (array_key_exists('priority', $network)) {
-                                    fwrite($wpa_file, "\tpriority=".$network['priority'].PHP_EOL);
-                                }
-                                if($network['hidden']){
-                                    fwrite($wpa_file, "\tscan_ssid=1".PHP_EOL);
-                                }
-                                fwrite($wpa_file, $line.PHP_EOL);
-                            } else {
-                                fwrite($wpa_file, $line.PHP_EOL);
-                            }
-                        }
-                    } else {
-                        $status->addMessage('WPA passphrase must be between 8 and 63 characters', 'danger');
-                        $ok = false;
-                    }
-                }
-            }
-            if ($ok) {
-                system('sudo cp /tmp/wifidata ' . RASPI_WPA_SUPPLICANT_CONFIG, $returnval);
-                if ($returnval == 0) {
-                    exec('sudo wpa_cli -i ' . $_SESSION['wifi_client_interface'] . ' reconfigure', $reconfigure_out, $reconfigure_return);
-                    if ($reconfigure_return == 0) {
-                        $status->addMessage('Wifi settings updated successfully', 'success');
-                        $networks = $tmp_networks;
-                    } else {
-                        $status->addMessage('Wifi settings updated but cannot restart (cannot execute "wpa_cli reconfigure")', 'danger');
-                    }
-                } else {
-                    $status->addMessage('Wifi settings failed to be updated', 'danger');
-                }
-            }
-        } else {
-            $status->addMessage('Failed to update wifi settings', 'danger');
+    
+    $ok = true;
+    foreach ($argNetworks as $ssid => $network) {
+      if ($network['protocol'] === 'Open') {
+        fwrite($wpa_file, "network={" . PHP_EOL);
+        fwrite($wpa_file, "\tssid=\"" . $ssid . "\"" . PHP_EOL);
+        fwrite($wpa_file, "\tkey_mgmt=NONE" . PHP_EOL);
+        if ($network['hidden']) {
+          fwrite($wpa_file, "\tscan_ssid=1" . PHP_EOL);
         }
+        if (array_key_exists('priority', $network)) {
+          fwrite($wpa_file, "\tpriority=" . $network['priority'] . PHP_EOL);
+        }
+        fwrite($wpa_file, "}" . PHP_EOL);
+      } else {
+        if (strlen($network['passphrase']) >= 8 && strlen($network['passphrase']) <= 63) {
+          unset($wpa_passphrase);
+          unset($line);
+          exec('wpa_passphrase ' . escapeshellarg($ssid) . ' ' . escapeshellarg($network['passphrase']), $wpa_passphrase);
+          foreach ($wpa_passphrase as $line) {
+            if (preg_match('/^\s*}\s*$/', $line)) {
+              if (array_key_exists('priority', $network)) {
+                fwrite($wpa_file, "\tpriority=" . $network['priority'] . PHP_EOL);
+              }
+              if ($network['hidden']) {
+                fwrite($wpa_file, "\tscan_ssid=1" . PHP_EOL);
+              }
+              fwrite($wpa_file, $line . PHP_EOL);
+            } else {
+              fwrite($wpa_file, $line . PHP_EOL);
+            }
+          }
+        } else {
+          $status->addMessage('WPA passphrase must be between 8 and 63 characters', 'danger');
+          $ok = false;
+        }
+      }
     }
+    if ($ok) {
+      system('sudo cp /tmp/wifidata ' . RASPI_WPA_SUPPLICANT_CONFIG, $returnval);
+      if ($returnval == 0) {
+        exec('sudo wpa_cli -i ' . $_SESSION['wifi_client_interface'] . ' reconfigure', $reconfigure_out, $reconfigure_return);
+        if ($reconfigure_return == 0) {
+          $status->addMessage('Wifi settings updated successfully', 'success');
+          return true;
+        } else {
+          $status->addMessage('Wifi settings updated but cannot restart (cannot execute "wpa_cli reconfigure")', 'danger');
+        }
+      } else {
+        $status->addMessage('Wifi settings failed to be updated', 'danger');
+      }
+    }
+  } else {
+    $status->addMessage('Failed to update wifi settings', 'danger');
+  }
+
+  return false;
+
+}
 
 
-    $clientInterface = $_SESSION['wifi_client_interface'];
+function DisplayWPAConfig()
+{
 
-    exec('ip a show '.$clientInterface, $stdoutIp);
-    $stdoutIpAllLinesGlued = implode(" ", $stdoutIp);
-    $stdoutIpWRepeatedSpaces = preg_replace('/\s\s+/', ' ', $stdoutIpAllLinesGlued);
-    preg_match('/state (UP|DOWN)/i', $stdoutIpWRepeatedSpaces, $matchesState) || $matchesState[1] = 'unknown';
-    $ifaceStatus = strtolower($matchesState[1]) ? "up" : "down";
+  $status = new StatusMessages();
+  $networks = [];
 
-    if ($returnJson){
-      nearbyWifiStations($networks);
-      connectedWifiStations($networks);
-      sortNetworksByRSSI($networks);
-      echo json_encode(compact("status", "clientInterface", "ifaceStatus", "networks"));
+  getWifiInterface();
+  knownWifiStations($networks);
+
+  if (isset($_POST['connect'])) {
+    $result = 0;
+    exec('sudo wpa_cli -i ' . $_SESSION['wifi_client_interface'] . ' select_network ' . strval($_POST['connect']));
+    $status->addMessage('New network selected', 'success');
+
+  } elseif (isset($_POST['connect_hidden'])) {
+
+    $ssid = $_POST['connect_hidden_ssid'];
+    $passphrase = $_POST['connect_hidden_passphrase'];
+
+    if (strlen($ssid) < 1 || strlen($ssid) > 32){
+        $status->addMessage('The SSID must be between 1 and 32 characters.', 'danger');
+    } else if (strlen($passphrase) < 8 || strlen($passphrase) > 63) {
+        $status->addMessage('WPA passphrase must be between 8 and 63 characters', 'danger');
     } else {
-      echo renderTemplate("configure_client", compact("status", "clientInterface", "ifaceStatus"));
+      $tmp_networks = $networks;
+      $tmp_networks[$ssid] = [
+        'protocol'=>'WPA',
+        'passphrase'=>$passphrase,
+        'hidden'=>true,
+        'configured' => true,
+      ];
+
+      // returns false on error
+      if(WriteNetworksToWpaSupplicantFile($tmp_networks, $status)){
+        $networks = $tmp_networks;
+      }
+    }
+  } elseif (isset($_POST['client_settings'])) {
+
+    $tmp_networks = $networks;
+
+    foreach (array_keys($_POST) as $post) {
+      if (preg_match('/delete(\d+)/', $post, $post_match)) {
+        unset($tmp_networks[$_POST['ssid' . $post_match[1]]]);
+      } elseif (preg_match('/update(\d+)/', $post, $post_match)) {
+        // NB, multiple protocols are separated with a forward slash ('/')
+        $tmp_networks[$_POST['ssid' . $post_match[1]]] = array(
+          'protocol' => ($_POST['protocol' . $post_match[1]] === 'Open' ? 'Open' : 'WPA'),
+          'passphrase' => $_POST['passphrase' . $post_match[1]],
+          'configured' => true,
+          'hidden' => ($_POST['hidden' . $post_match[1]] ?? "0") == "1",
+
+        );
+        if (array_key_exists('priority' . $post_match[1], $_POST)) {
+          $tmp_networks[$_POST['ssid' . $post_match[1]]]['priority'] = $_POST['priority' . $post_match[1]];
+        }
+      }
     }
 
+    // returns false on error
+    if(WriteNetworksToWpaSupplicantFile($tmp_networks, $status)){
+      $networks = $tmp_networks;
+    }
+  } 
+
+  nearbyWifiStations($networks);
+  connectedWifiStations($networks);
+  sortNetworksByRSSI($networks);
+
+  $clientInterface = $_SESSION['wifi_client_interface'];
+
+  exec('ip a show ' . $clientInterface, $stdoutIp);
+  $stdoutIpAllLinesGlued = implode(" ", $stdoutIp);
+  $stdoutIpWRepeatedSpaces = preg_replace('/\s\s+/', ' ', $stdoutIpAllLinesGlued);
+  preg_match('/state (UP|DOWN)/i', $stdoutIpWRepeatedSpaces, $matchesState) || $matchesState[1] = 'unknown';
+  $ifaceStatus = strtolower($matchesState[1]) ? "up" : "down";
+
+  echo renderTemplate("configure_client", compact("status", "clientInterface", "ifaceStatus"));
 }
